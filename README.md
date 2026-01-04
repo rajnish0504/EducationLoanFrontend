@@ -1,16 +1,50 @@
-# React + Vite
+# 🎓 EduLoan Nexus
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+EduLoan Nexus is a **full-stack education loan management system** designed to simplify the process of applying, approving, and tracking education loans.  
+It provides a modern, secure, and transparent platform for students and administrators.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## React Compiler
+### 🌐 Landing Page
+- Modern, responsive landing page built with **React + Tailwind CSS**
+- Interactive sections:
+  - Hero section with animated background
+  - Features overview
+  - EMI Calculator
+  - How it works timeline
+- Persistent dark mode across all pages
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🔐 Authentication
+- Student Signup & Login
+- JWT-based authentication
+- Secure password handling
+- Consistent theme across Landing, Login, and Signup pages
 
-## Expanding the ESLint configuration
+### 🧮 EMI Calculator
+- Real-time EMI calculation
+- Inputs for loan amount, interest rate, and tenure
+- Clean and user-friendly UI
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 🎨 UI & UX
+- Fully responsive (mobile, tablet, desktop)
+- Dark / Light mode with persistence
+- Smooth animations and transitions
+- Fintech-style professional design
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+- React (Vite)
+- Tailwind CSS
+- React Router DOM
+- Axios
+
+### Backend
+- Spring Boot
+- Java
+- REST APIs
+- JWT Authentication

@@ -28,7 +28,6 @@ It provides a modern, secure, and transparent platform for students and administ
 - Clean and user-friendly UI
 
 ### 🎨 UI & UX
-- Fully responsive (mobile, tablet, desktop)
 - Dark / Light mode with persistence
 - Smooth animations and transitions
 - Fintech-style professional design

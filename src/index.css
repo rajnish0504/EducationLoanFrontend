@@ -1,68 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =====================================================
+   BASE TYPOGRAPHY & COLOR SYSTEM
+   ===================================================== */
+
+@layer base {
+  body {
+    @apply bg-white text-slate-800 antialiased
+           dark:bg-[#0b1220] dark:text-slate-200;
+  }
+
+  h1, h2, h3 {
+    @apply text-slate-900 dark:text-white tracking-tight;
+  }
+
+  p {
+    @apply text-slate-600 dark:text-slate-400 leading-relaxed;
+  }
+}
+
+/* =====================================================
+   MOTION SYSTEM (CALM & CONFIDENT)
+   ===================================================== */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* =====================================================
+   GRID (CIRCUIT BOARD BASE)
+   ===================================================== */
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+}
+
+.dark .bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+}
+
+/* =====================================================
+   ENERGY FLOW (DATA SCAN)
+   ===================================================== */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --energy-speed: 6s;
+  --energy-glow: 0.35;
+  --energy-x: 50%;
+  --energy-y: 50%;
+  --energy-hue: 210; /* blue → indigo */
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@keyframes scan {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
   }
-  a:hover {
-    color: #747bff;
+  35% {
+    opacity: 0.35;
   }
-  button {
-    background-color: #f9f9f9;
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
   }
+}
+
+.bg-energy::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsla(var(--energy-hue), 85%, 60%, 0.18),
+    transparent
+  );
+  animation: scan var(--energy-speed) linear infinite;
+  pointer-events: none;
+}
+
+/* =====================================================
+   MICRO-SPARKS (POWER NODES)
+   ===================================================== */
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.18; }
+  50% { opacity: 0.55; }
+}
+
+.bg-sparks::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 22% 28%, rgba(59,130,246,0.22), transparent 42%),
+    radial-gradient(circle at 68% 62%, rgba(99,102,241,0.22), transparent 42%),
+    radial-gradient(circle at 45% 82%, rgba(59,130,246,0.18), transparent 45%);
+  animation: pulse 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* =====================================================
+   CURSOR-REACTIVE ENERGY FIELD
+   ===================================================== */
+
+.bg-reactive::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    640px circle at var(--energy-x) var(--energy-y),
+    hsla(var(--energy-hue), 90%, 60%, 0.14),
+    transparent 42%
+  );
+  pointer-events: none;
+}
+
+.dark .bg-reactive::after {
+  background: radial-gradient(
+    640px circle at var(--energy-x) var(--energy-y),
+    hsla(var(--energy-hue), 90%, 65%, 0.18),
+    transparent 48%
+  );
+}
+
+/* =====================================================
+   SVG CIRCUIT TRACES (DATA FLOW)
+   ===================================================== */
+
+@keyframes circuitFlow {
+  to {
+    stroke-dashoffset: -140;
+  }
+}
+
+.circuit-svg path {
+  stroke-dasharray: 10 8;
+  animation: circuitFlow 7s linear infinite;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.circuit-svg {
+  filter: drop-shadow(
+    0 0 calc(14px * var(--energy-glow))
+    hsla(var(--energy-hue), 85%, 60%, 0.6)
+  );
+}
+
+.dark .circuit-svg {
+  filter: drop-shadow(
+    0 0 calc(16px * var(--energy-glow))
+    hsla(var(--energy-hue), 85%, 65%, 0.65)
+  );
 }

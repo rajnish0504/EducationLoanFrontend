@@ -5,6 +5,7 @@ import { applyTheme, getInitialTheme } from "../utils/theme";
 
 
 const Login = ({ onLoginSuccess }) => {
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -25,14 +26,14 @@ useEffect(() => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/auth/login",
+        "http://localhost:8093/api/auth/login",
         { email, password }
       );
 
       const jwtToken = response.data.token;
       onLoginSuccess(jwtToken);
 
-      navigate("/"); // redirect to landing page
+      navigate("/dashboard"); 
     } catch (err) {
       if (err.response) {
         setError(err.response.data.message || "Invalid credentials");

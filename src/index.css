@@ -172,3 +172,81 @@
     hsla(var(--energy-hue), 85%, 65%, 0.65)
   );
 }
+/* Smooth entrance */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-rise {
+  animation: rise 0.6s ease-out both;
+}
+
+/* Neon glow pulse */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(59,130,246,0.0);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59,130,246,0.25);
+  }
+}
+
+.glow-hover:hover {
+  animation: glow 1.8s ease-in-out infinite;
+}
+/* ===============================
+   PARTICLE BACKGROUND
+================================ */
+
+.particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.particles span {
+  position: absolute;
+  display: block;
+  width: 4px;
+  height: 4px;
+  background: rgba(59,130,246,0.6);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(59,130,246,0.6);
+  animation: floatParticle linear infinite;
+  opacity: 0.8;
+}
+
+/* Different sizes */
+.particles span:nth-child(odd) {
+  width: 3px;
+  height: 3px;
+  opacity: 0.5;
+}
+
+/* Motion */
+@keyframes floatParticle {
+  from {
+    transform: translateY(100vh) translateX(0);
+  }
+  to {
+    transform: translateY(-10vh) translateX(40px);
+  }
+}
+
+/* Dark mode tuning */
+.dark .particles span {
+  background: rgba(96,165,250,0.7);
+  box-shadow: 0 0 16px rgba(96,165,250,0.6);
+}
+.input {
+  @apply bg-[#0b1220] border border-slate-600 rounded-lg px-4 py-3 text-white
+         placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600;
+}

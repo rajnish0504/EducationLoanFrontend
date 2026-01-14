@@ -10,8 +10,8 @@ const Topbar = () => {
 
   useEffect(() => {
     api.get("/api/auth/me")
-      .then((res) => setStudentName(res.data.name))
-      .catch(() => setStudentName("Student"));
+      .then(res => setStudentName(res.data.name))
+      .catch(() => {});
   }, []);
 
   const handleLogout = () => {
@@ -21,7 +21,7 @@ const Topbar = () => {
 
   return (
     <header className="h-16 flex justify-between items-center px-8 bg-[#0b1220] border-b border-slate-700">
-      <span className="text-white font-semibold tracking-wide">
+      <span className="text-white font-semibold">
         EduLoan Nexus
       </span>
 

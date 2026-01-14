@@ -1,143 +1,111 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { getAuth, logout } from "../utils/auth";
 
 const Navbar = () => {
-  const [dark, setDark] = useState(
-    () => localStorage.getItem("theme") === "dark"
-  );
-  const [open, setOpen] = useState(false);
-
   const navigate = useNavigate();
   const location = useLocation();
 
-  /* Apply theme globally */
+  const [dark, setDark] = useState(
+    () => localStorage.getItem("theme") === "dark"
+  );
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [auth, setAuth] = useState(getAuth());
+
+  /* Sync auth */
   useEffect(() => {
-    if (dark) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
+    const syncAuth = () => setAuth(getAuth());
+    window.addEventListener("storage", syncAuth);
+    return () => window.removeEventListener("storage", syncAuth);
+  }, []);
+
+  /* Theme */
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+    localStorage.setItem("theme", dark ? "dark" : "light");
   }, [dark]);
 
-  /* Scroll helper (only works on landing page) */
+  /* Scroll helper */
   const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     }
-    setOpen(false);
+    setMenuOpen(false);
   };
 
-  /* Logo click logic */
-  const handleLogoClick = () => {
-    if (location.pathname === "/") {
-      scrollTo("hero");
-    } else {
-      navigate("/");
-    }
+  const handleLogout = () => {
+    logout();
+    setAuth({ isLoggedIn: false, role: null });
+    navigate("/");
   };
+
+  const dashboardRoute =
+    auth.role === "ADMIN"
+      ? "/admin/dashboard"
+      : "/student/dashboard";
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur bg-white/80 dark:bg-[#0b1220]/80 border-b border-slate-200 dark:border-slate-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 flex justify-between items-center">
-        
-        {/* Logo */}
+    <nav className="sticky top-0 z-50 backdrop-blur bg-white/80 dark:bg-[#0b1220]/80 border-b">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
         <h1
-          onClick={handleLogoClick}
-          className="cursor-pointer text-xl sm:text-2xl font-bold text-blue-600"
+          onClick={() => navigate("/")}
+          className="cursor-pointer text-2xl font-bold text-blue-600"
         >
           EduLoan Nexus
         </h1>
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700 dark:text-slate-300">
-          <button
-            onClick={() => scrollTo("features")}
-            className="hover:text-blue-600 transition"
-          >
-            Features
-          </button>
-          <button
-            onClick={() => scrollTo("emi")}
-            className="hover:text-blue-600 transition"
-          >
-            EMI Calculator
-          </button>
-          <button
-            onClick={() => scrollTo("process")}
-            className="hover:text-blue-600 transition"
-          >
-            How It Works
-          </button>
+        <div className="hidden md:flex gap-8 text-sm font-medium">
+          <button onClick={() => scrollTo("features")}>Features</button>
+          <button onClick={() => scrollTo("emi")}>EMI Calculator</button>
+          <button onClick={() => scrollTo("process")}>How It Works</button>
         </div>
 
-        {/* Actions */}
         <div className="flex items-center gap-3">
-          {/* Dark Mode Toggle */}
           <button
             onClick={() => setDark(!dark)}
-            className="border border-slate-300 dark:border-slate-600 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-            aria-label="Toggle dark mode"
+            className="border px-3 py-2 rounded-lg"
           >
             {dark ? "☀️" : "🌙"}
           </button>
 
-          {/* Login (Desktop) */}
-          <button
-            onClick={() => navigate("/login")}
-            className="hidden md:block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-          >
-            Login
-          </button>
+          {!auth.isLoggedIn ? (
+            <button
+              onClick={() => navigate("/login")}
+              className="hidden md:block bg-blue-600 text-white px-4 py-2 rounded-lg"
+            >
+              Login
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate(dashboardRoute)}
+                className="hidden md:block bg-green-600 text-white px-4 py-2 rounded-lg"
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={handleLogout}
+                className="hidden md:block border border-red-400 text-red-500 px-3 py-2 rounded-lg"
+              >
+                Logout
+              </button>
+            </>
+          )}
 
-          {/* Hamburger (Mobile) */}
           <button
-            onClick={() => setOpen(!open)}
-            className="md:hidden border border-slate-300 dark:border-slate-600 px-3 py-2 rounded-lg"
-            aria-label="Open menu"
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden border px-3 py-2 rounded-lg"
           >
             ☰
           </button>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {open && (
-        <div className="md:hidden bg-white dark:bg-[#0b1220] border-t border-slate-200 dark:border-slate-700">
-          <div className="flex flex-col px-6 py-4 gap-4 text-slate-700 dark:text-slate-300">
-            <button
-              onClick={() => scrollTo("features")}
-              className="text-left"
-            >
-              Features
-            </button>
-            <button
-              onClick={() => scrollTo("emi")}
-              className="text-left"
-            >
-              EMI Calculator
-            </button>
-            <button
-              onClick={() => scrollTo("process")}
-              className="text-left"
-            >
-              How It Works
-            </button>
-
-            <button
-              onClick={() => {
-                setOpen(false);
-                navigate("/login");
-              }}
-              className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg"
-            >
-              Login
-            </button>
-          </div>
-        </div>
-      )}
     </nav>
   );
 };

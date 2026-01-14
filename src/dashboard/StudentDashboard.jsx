@@ -1,6 +1,6 @@
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
-import DashboardHome from "./DashboardHome";
+import { Outlet } from "react-router-dom";
 
 const StudentDashboard = () => {
   return (
@@ -9,9 +9,8 @@ const StudentDashboard = () => {
 
       <div className="flex-1 flex flex-col">
         <Topbar />
-
         <main className="p-8">
-          <DashboardHome />
+          <Outlet />
         </main>
       </div>
     </div>

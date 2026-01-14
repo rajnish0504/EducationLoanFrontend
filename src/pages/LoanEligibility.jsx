@@ -1,5 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
+import Navbar from "../components/Navbar";
+import Sidebar from "../dashboard/Sidebar";
+import { useNavigate } from "react-router-dom";
 
 const LoanEligibility = () => {
   const [form, setForm] = useState({
@@ -7,10 +10,13 @@ const LoanEligibility = () => {
     courseName: "",
     instituteName: "",
     courseDuration: "",
-    studentId: 1, // later from token/session
+    studentId: 1, // later derive from token
   });
 
   const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,75 +24,107 @@ const LoanEligibility = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus("Submitting...");
+    setLoading(true);
+    setStatus("Submitting application...");
 
     try {
-      await axios.post(
-        "http://localhost:8093/api/loan-application/apply",
+      const res = await api.post(
+        "/api/loan-application/apply",
         form
       );
-      setStatus("✅ Application submitted successfully!");
-    // eslint-disable-next-line no-unused-vars
-    } catch (err) {
-      setStatus("❌ Something went wrong");
+
+      const applicationId = res.data.applicationId;
+      setStatus("Application submitted successfully");
+
+      setTimeout(() => {
+        navigate(`/upload-documents/${applicationId}`);
+      }, 600);
+    } catch {
+      setStatus("Something went wrong");
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0b1220] flex items-center justify-center px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-[#131c31] w-full max-w-xl p-8 rounded-2xl shadow-lg"
-      >
-        <h2 className="text-2xl font-bold text-white mb-6">
-          Education Loan Application
-        </h2>
+    <div className="min-h-screen bg-[#0b1220]">
+      <Navbar />
 
-        <div className="space-y-4">
-          <input
-            name="loanAmount"
-            placeholder="Loan Amount"
-            onChange={handleChange}
-            className="w-full p-3 rounded bg-[#0b1220] text-white"
-            required
-          />
+      <div className="flex">
+        <Sidebar />
 
-          <input
-            name="courseName"
-            placeholder="Course Name"
-            onChange={handleChange}
-            className="w-full p-3 rounded bg-[#0b1220] text-white"
-            required
-          />
+        <div className="flex-1 p-8">
+          <form
+            onSubmit={handleSubmit}
+            className="bg-[#131c31] max-w-xl mx-auto p-8 rounded-2xl shadow-lg"
+          >
+            <h2 className="text-2xl font-bold text-white mb-6">
+              Education Loan Application
+            </h2>
 
-          <input
-            name="instituteName"
-            placeholder="Institute Name"
-            onChange={handleChange}
-            className="w-full p-3 rounded bg-[#0b1220] text-white"
-            required
-          />
+            <div className="space-y-4">
+              <input
+                type="number"
+                name="loanAmount"
+                placeholder="Loan Amount"
+                value={form.loanAmount}
+                onChange={handleChange}
+                className="w-full p-3 rounded bg-[#0b1220] text-white"
+                required
+              />
 
-          <input
-            name="courseDuration"
-            placeholder="Course Duration (Years)"
-            onChange={handleChange}
-            className="w-full p-3 rounded bg-[#0b1220] text-white"
-            required
-          />
+              <input
+                name="courseName"
+                placeholder="Course Name"
+                value={form.courseName}
+                onChange={handleChange}
+                className="w-full p-3 rounded bg-[#0b1220] text-white"
+                required
+              />
+
+              <input
+                name="instituteName"
+                placeholder="Institute Name"
+                value={form.instituteName}
+                onChange={handleChange}
+                className="w-full p-3 rounded bg-[#0b1220] text-white"
+                required
+              />
+
+              <input
+                type="number"
+                name="courseDuration"
+                placeholder="Course Duration (Years)"
+                value={form.courseDuration}
+                onChange={handleChange}
+                className="w-full p-3 rounded bg-[#0b1220] text-white"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`
+                mt-8 w-full py-3 rounded-xl font-semibold
+                bg-gradient-to-r from-blue-600 to-indigo-600
+                ${
+                  loading
+                    ? "opacity-60 cursor-not-allowed"
+                    : "hover:scale-[1.02]"
+                }
+              `}
+            >
+              {loading ? "Processing..." : "Next → Upload Documents"}
+            </button>
+
+            {status && (
+              <p className="mt-4 text-center text-slate-300">
+                {status}
+              </p>
+            )}
+          </form>
         </div>
-
-        <button
-          type="submit"
-          className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700"
-        >
-          Submit Application
-        </button>
-
-        {status && (
-          <p className="mt-4 text-center text-slate-300">{status}</p>
-        )}
-      </form>
+      </div>
     </div>
   );
 };

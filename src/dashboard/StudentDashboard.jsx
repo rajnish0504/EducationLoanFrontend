@@ -10,7 +10,7 @@ const StudentDashboard = () => {
       <div className="flex-1 flex flex-col">
         <Topbar />
 
-        <main className="p-6">
+        <main className="p-8">
           <DashboardHome />
         </main>
       </div>

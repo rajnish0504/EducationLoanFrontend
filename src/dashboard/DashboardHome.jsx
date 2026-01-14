@@ -3,29 +3,24 @@ import ApplyLoanCard from "./ApplyLoanCard";
 const DashboardHome = () => {
   return (
     <div className="space-y-10">
-      
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { label: "Loan Amount", value: "₹ 5,00,000" },
-          { label: "Interest Rate", value: "8%" },
-          { label: "Tenure", value: "5 Years" },
-          { label: "Monthly EMI", value: "₹ 10,123" },
+          { label: "Outstanding Balance", value: "₹ 4,52,000" },
+          { label: "Upcoming Payment", value: "₹ 10,450" },
+          { label: "Credit Score", value: "780" },
         ].map((item, i) => (
           <div
             key={i}
             className="
               bg-[#131c31]/80 backdrop-blur
               border border-slate-700
-              rounded-xl p-5
-              hover:-translate-y-1 hover:shadow-xl
-              transition-all duration-300
-              animate-rise
+              rounded-2xl p-6
             "
-            style={{ animationDelay: `${i * 80}ms` }}
           >
             <p className="text-sm text-slate-400">{item.label}</p>
-            <p className="text-xl font-bold text-white mt-1 tracking-wide">
+            <p className="text-2xl font-bold text-white mt-2">
               {item.value}
             </p>
           </div>
@@ -35,23 +30,26 @@ const DashboardHome = () => {
       {/* Apply Loan */}
       <ApplyLoanCard />
 
-      {/* Loan Progress */}
-      <div className="bg-[#131c31]/80 backdrop-blur border border-slate-700 rounded-xl p-6 animate-rise">
-        <h4 className="text-white font-semibold mb-4">
-          Loan Progress
-        </h4>
+      {/* Recent Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-[#131c31]/80 border border-slate-700 rounded-2xl p-6">
+          <h4 className="text-white font-semibold mb-4">
+            Recent Activity
+          </h4>
+          <ul className="space-y-3 text-sm text-slate-400">
+            <li>✔ Payment of ₹10,450 processed</li>
+            <li>✔ Document uploaded successfully</li>
+            <li>✔ New loan offer available</li>
+          </ul>
+        </div>
 
-        <div className="flex items-center gap-4 text-sm">
-          {["Applied", "Approved", "EMI Active", "Completed"].map(
-            (step, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <div className={`h-3 w-3 rounded-full ${i <= 1 ? "bg-blue-500" : "bg-slate-600"}`} />
-                <span className={i <= 1 ? "text-white" : "text-slate-400"}>
-                  {step}
-                </span>
-              </div>
-            )
-          )}
+        <div className="bg-[#131c31]/80 border border-slate-700 rounded-2xl p-6">
+          <h4 className="text-white font-semibold mb-4">
+            Loan Distribution
+          </h4>
+          <p className="text-slate-400 text-sm">
+            Tuition (60%), Living (30%), Books (10%)
+          </p>
         </div>
       </div>
     </div>

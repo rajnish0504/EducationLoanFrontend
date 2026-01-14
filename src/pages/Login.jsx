@@ -1,155 +1,88 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { saveToken } from "../utils/auth";
 import { applyTheme, getInitialTheme } from "../utils/theme";
 
-
-const Login = ({ onLoginSuccess }) => {
-  
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [dark, setDark] = useState(getInitialTheme());
 
   const navigate = useNavigate();
 
-  /* Dark mode toggle */
-  const [dark, setDark] = useState(getInitialTheme());
-
-useEffect(() => {
-  applyTheme(dark);
-}, [dark]);
-
+  useEffect(() => {
+    applyTheme(dark);
+  }, [dark]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      const response = await axios.post(
+      const res = await axios.post(
         "http://localhost:8093/api/auth/login",
         { email, password }
       );
 
-      const jwtToken = response.data.token;
-      onLoginSuccess(jwtToken);
-
-      navigate("/dashboard"); 
-    } catch (err) {
-      if (err.response) {
-        setError(err.response.data.message || "Invalid credentials");
-      } else {
-        setError("Server not reachable");
-      }
+      saveToken(res.data.token);
+      navigate("/dashboard");
+    } catch {
+      setError("Invalid credentials");
     }
   };
 
   return (
     <>
-      {/* ===== Navbar ===== */}
-      <nav className="fixed top-0 w-full z-50 bg-white dark:bg-[#0b1220] border-b border-slate-200 dark:border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 flex justify-between items-center">
-          {/* Logo */}
+      {/* Navbar */}
+      <nav className="fixed top-0 w-full bg-white dark:bg-[#0b1220] border-b">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between">
           <button
             onClick={() => navigate("/")}
-            className="text-xl sm:text-2xl font-bold text-blue-600 hover:opacity-90 transition"
+            className="text-xl font-bold text-blue-600"
           >
             EduLoan Nexus
           </button>
 
-          {/* Dark Mode Toggle */}
           <button
             onClick={() => setDark(!dark)}
-            className="border border-slate-300 dark:border-slate-600 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            className="border px-3 py-2 rounded"
           >
             {dark ? "☀️" : "🌙"}
           </button>
         </div>
       </nav>
 
-      {/* ===== Login Section ===== */}
-      <section className="min-h-screen pt-28 flex items-center justify-center bg-grid bg-white dark:bg-[#0b1220] px-4">
-        <div className="w-full max-w-md bg-white dark:bg-[#131c31] rounded-2xl shadow-2xl p-8 sm:p-10 animate-fade-up">
-          
-          {/* Header */}
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2">
-            Welcome Back
-          </h2>
-          <p className="text-center text-sm mb-8">
-            Login to continue to{" "}
-            <span className="font-semibold">EduLoan Nexus</span>
-          </p>
+      {/* Login */}
+      <section className="min-h-screen pt-28 flex justify-center items-center">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white dark:bg-[#131c31] p-8 rounded-xl w-[400px]"
+        >
+          <h2 className="text-2xl font-bold mb-6">Login</h2>
 
-          {/* Error Message */}
-          {error && (
-            <div className="mb-4 text-sm text-red-500 bg-red-50 dark:bg-red-500/10 px-4 py-2 rounded-lg">
-              {error}
-            </div>
-          )}
+          {error && <p className="text-red-500">{error}</p>}
 
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-sm mb-1">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-                className="
-                  w-full px-4 py-3 rounded-xl
-                  border border-slate-300 dark:border-slate-600
-                  bg-white dark:bg-slate-800
-                  focus:outline-none focus:ring-2 focus:ring-blue-500
-                  transition
-                "
-              />
-            </div>
+          <input
+            className="w-full mb-4 p-3 rounded border"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-            <div>
-              <label className="block text-sm mb-1">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                className="
-                  w-full px-4 py-3 rounded-xl
-                  border border-slate-300 dark:border-slate-600
-                  bg-white dark:bg-slate-800
-                  focus:outline-none focus:ring-2 focus:ring-blue-500
-                  transition
-                "
-              />
-            </div>
+          <input
+            type="password"
+            className="w-full mb-6 p-3 rounded border"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-            <button
-              type="submit"
-              className="
-                w-full mt-4
-                bg-blue-600 hover:bg-blue-700
-                text-white font-medium
-                py-3 rounded-xl
-                shadow-lg hover:shadow-xl
-                transition
-              "
-            >
-              Login
-            </button>
-          </form>
-
-          {/* Signup Redirect */}
-          <div className="mt-6 text-center text-sm">
-            Don’t have an account?{" "}
-            <button
-              onClick={() => navigate("/signup")}
-              className="text-blue-600 hover:underline font-medium"
-            >
-              Sign up
-            </button>
-          </div>
-        </div>
+          <button className="w-full bg-blue-600 text-white py-3 rounded">
+            Login
+          </button>
+        </form>
       </section>
     </>
   );

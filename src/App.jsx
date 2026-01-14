@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import LandingPage from "./pages/LandingPage";
@@ -6,40 +5,48 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import StudentDashboard from "./dashboard/StudentDashboard";
 import LoanEligibility from "./pages/LoanEligibility";
+import DocumentUpload from "./pages/DocumentUpload";
+
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  const [token, setToken] = useState(null);
-
   return (
     <Routes>
-      {/* Public Routes */}
+      {/* ===== Public Routes ===== */}
       <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
 
-      <Route
-        path="/login"
-        element={<Login onLoginSuccess={setToken} />}
-      />
-
-      <Route
-        path="/signup"
-        element={<Signup onSignupSuccess={() => {}} />}
-      />
-
-      {/* ✅ PROTECTED DASHBOARD */}
+      {/* ===== Protected Routes ===== */}
       <Route
         path="/dashboard"
         element={
-          token ? <StudentDashboard /> : <Navigate to="/login" />
+          <ProtectedRoute>
+            <StudentDashboard />
+          </ProtectedRoute>
         }
       />
 
-      {/* Optional fallback */}
-      <Route path="*" element={<Navigate to="/" />} />
-
-            <Route
+      <Route
         path="/apply-loan"
-        element={token ? <LoanEligibility /> : <Navigate to="/login" />}
-/>
+        element={
+          <ProtectedRoute>
+            <LoanEligibility />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/upload-documents/:applicationId"
+        element={
+          <ProtectedRoute>
+            <DocumentUpload />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ===== Fallback ===== */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

@@ -15,7 +15,6 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  /* Apply global theme */
   useEffect(() => {
     if (dark) {
       document.documentElement.classList.add("dark");
@@ -26,189 +25,109 @@ const Login = () => {
     }
   }, [dark]);
 
-  /* Logo click */
   const handleLogoClick = () => {
     if (location.pathname === "/") {
-      document
-        .getElementById("hero")
-        ?.scrollIntoView({ behavior: "smooth" });
+      document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" });
     } else {
       navigate("/");
     }
   };
 
-  /* Login submit */
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setError("");
-
-  //   try {
-  //     const res = await axios.post(
-  //       "http://localhost:8093/api/auth/login",
-  //       { email, password, role }
-  //     );
-
-  //     saveToken(res.data.token);
-  //     localStorage.setItem("role", role);
-
-  //     if (role === "ADMIN") {
-  //       navigate("/admin/dashboard");
-  //     } else {
-  //       navigate("/student/dashboard");
-  //     }
-  //   } catch {
-  //     setError("Invalid email or password");
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+    e.preventDefault();
+    setError("");
 
-  try {
-    const url =
-      role === "ADMIN"
-        ? "http://localhost:8093/api/admin/login"
-        : "http://localhost:8093/api/auth/login";
+    try {
+      const url =
+        role === "ADMIN"
+          ? "http://localhost:8093/api/admin/login"
+          : "http://localhost:8093/api/auth/login";
 
-    const res = await axios.post(url, { email, password });
+      const res = await axios.post(url, { email, password });
 
-    saveToken(res.data.token);
-    localStorage.setItem("role", role);
+      saveToken(res.data.token);
+      localStorage.setItem("role", role);
 
-    if (role === "ADMIN") {
-      navigate("/admin/dashboard");
-    } else {
-      navigate("/student/dashboard");
+      navigate(role === "ADMIN" ? "/admin/dashboard" : "/student/dashboard");
+    } catch {
+      setError("Invalid email or password");
     }
-  } catch {
-    setError("Invalid email or password");
-  }
-};
-
+  };
 
   return (
     <>
-      {/* ===== Navbar ===== */}
-      <nav className="fixed top-0 w-full z-50 backdrop-blur bg-white/80 dark:bg-[#0b1220]/80 border-b border-slate-200 dark:border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 flex justify-between items-center">
-          
-          {/* Logo */}
+      {/* Navbar */}
+      <nav className="fixed top-0 w-full z-50 backdrop-blur bg-white/80 dark:bg-[#0b1220]/80 border-b">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between">
           <h1
             onClick={handleLogoClick}
-            className="cursor-pointer text-xl sm:text-2xl font-bold text-blue-600"
+            className="cursor-pointer text-xl font-bold text-blue-600"
           >
             EduLoan Nexus
           </h1>
 
-          {/* Theme Toggle */}
           <button
             onClick={() => setDark(!dark)}
-            className="border border-slate-300 dark:border-slate-600 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            className="border px-3 py-2 rounded-lg"
           >
             {dark ? "☀️" : "🌙"}
           </button>
         </div>
       </nav>
 
-      {/* ===== Login Section ===== */}
-      <section className="min-h-screen pt-28 flex items-center justify-center bg-grid bg-white dark:bg-[#0b1220] px-4">
-        <div className="w-full max-w-md bg-white dark:bg-[#131c31] rounded-2xl shadow-2xl p-8 sm:p-10 animate-fade-up">
-
-          {/* Header */}
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2">
+      {/* Login Form */}
+      <section className="min-h-screen pt-28 flex justify-center items-center">
+        <div className="w-full max-w-md bg-white dark:bg-[#131c31] p-8 rounded-2xl">
+          <h2 className="text-2xl font-bold text-center mb-6">
             Welcome Back
           </h2>
-          <p className="text-center text-sm mb-8">
-            Login to <span className="font-semibold">EduLoan Nexus</span>
-          </p>
 
-          {/* Error */}
           {error && (
-            <div className="mb-4 text-sm text-red-500 bg-red-50 dark:bg-red-500/10 px-4 py-2 rounded-lg">
-              {error}
-            </div>
+            <div className="mb-4 text-red-500 text-sm">{error}</div>
           )}
 
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-
-            {/* Role */}
-            <div>
-              <label className="block text-sm mb-1">Role</label>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="
-                  w-full px-4 py-3 rounded-xl
-                  border border-slate-300 dark:border-slate-600
-                  bg-white dark:bg-slate-800
-                "
-              >
-                <option value="STUDENT">Student</option>
-                <option value="ADMIN">Admin</option>
-              </select>
-            </div>
-
-            {/* Email */}
-            <div>
-              <label className="block text-sm mb-1">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-                className="
-                  w-full px-4 py-3 rounded-xl
-                  border border-slate-300 dark:border-slate-600
-                  bg-white dark:bg-slate-800
-                "
-              />
-            </div>
-
-            {/* Password */}
-            <div>
-              <label className="block text-sm mb-1">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                className="
-                  w-full px-4 py-3 rounded-xl
-                  border border-slate-300 dark:border-slate-600
-                  bg-white dark:bg-slate-800
-                "
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="
-                w-full mt-4
-                bg-blue-600 hover:bg-blue-700
-                text-white font-medium
-                py-3 rounded-xl
-                shadow-lg hover:shadow-xl
-                transition
-              "
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl"
             >
+              <option value="STUDENT">Student</option>
+              <option value="ADMIN">Admin</option>
+            </select>
+
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-4 py-3 rounded-xl"
+            />
+
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-4 py-3 rounded-xl"
+            />
+
+            <button className="w-full bg-blue-600 text-white py-3 rounded-xl">
               Login
             </button>
           </form>
 
-          {/* Signup Redirect */}
-          <div className="mt-6 text-center text-sm">
+          <p className="text-sm text-center mt-4">
             Don’t have an account?{" "}
             <button
               onClick={() => navigate("/signup")}
-              className="text-blue-600 hover:underline font-medium"
+              className="text-blue-600"
             >
               Sign Up
             </button>
-          </div>
+          </p>
         </div>
       </section>
     </>

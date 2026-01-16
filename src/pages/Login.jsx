@@ -38,28 +38,54 @@ const Login = () => {
   };
 
   /* Login submit */
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setError("");
+
+  //   try {
+  //     const res = await axios.post(
+  //       "http://localhost:8093/api/auth/login",
+  //       { email, password, role }
+  //     );
+
+  //     saveToken(res.data.token);
+  //     localStorage.setItem("role", role);
+
+  //     if (role === "ADMIN") {
+  //       navigate("/admin/dashboard");
+  //     } else {
+  //       navigate("/student/dashboard");
+  //     }
+  //   } catch {
+  //     setError("Invalid email or password");
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
+  setError("");
 
-    try {
-      const res = await axios.post(
-        "http://localhost:8093/api/auth/login",
-        { email, password, role }
-      );
+  try {
+    const url =
+      role === "ADMIN"
+        ? "http://localhost:8093/api/admin/login"
+        : "http://localhost:8093/api/auth/login";
 
-      saveToken(res.data.token);
-      localStorage.setItem("role", role);
+    const res = await axios.post(url, { email, password });
 
-      if (role === "ADMIN") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/student/dashboard");
-      }
-    } catch {
-      setError("Invalid email or password");
+    saveToken(res.data.token);
+    localStorage.setItem("role", role);
+
+    if (role === "ADMIN") {
+      navigate("/admin/dashboard");
+    } else {
+      navigate("/student/dashboard");
     }
-  };
+  } catch {
+    setError("Invalid email or password");
+  }
+};
+
 
   return (
     <>

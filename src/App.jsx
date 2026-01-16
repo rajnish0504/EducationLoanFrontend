@@ -1,35 +1,38 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-/* Public pages */
+/* ===== Public Pages ===== */
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
-/* Student dashboard & pages */
+/* ===== Student Dashboard & Pages ===== */
 import StudentDashboard from "./dashboard/StudentDashboard";
 import DashboardHome from "./dashboard/DashboardHome";
 import MyLoans from "./dashboard/MyLoans";
 import Documents from "./dashboard/Documents";
 
-/* Other student pages */
+/* ===== Student Standalone Pages ===== */
 import LoanEligibility from "./pages/LoanEligibility";
 import DocumentUpload from "./pages/DocumentUpload";
 
-/* Admin dashboard (placeholder for now) */
+/* ===== Admin Layout & Pages ===== */
+import AdminLayout from "./dashboard/AdminLayout";
 import AdminDashboard from "./dashboard/AdminDashboard";
+import AdminApplications from "./dashboard/AdminApplications";
 
-/* Auth */
+/* ===== Auth ===== */
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Routes>
+
       {/* ===== Public Routes ===== */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
 
-      {/* ===== Student Routes (Nested Dashboard) ===== */}
+      {/* ===== Student Routes (Nested) ===== */}
       <Route
         path="/student"
         element={
@@ -63,15 +66,19 @@ function App() {
         }
       />
 
-      {/* ===== Admin Routes ===== */}
+      {/* ===== Admin Routes (Nested like Student) ===== */}
       <Route
-        path="/admin/dashboard"
+        path="/admin"
         element={
           <ProtectedRoute allowedRole="ADMIN">
-            <AdminDashboard />
+            <AdminLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<AdminDashboard />} />
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="applications" element={<AdminApplications />} />
+      </Route>
 
       {/* ===== Smart Dashboard Redirect ===== */}
       <Route
@@ -89,6 +96,7 @@ function App() {
 
       {/* ===== Fallback ===== */}
       <Route path="*" element={<Navigate to="/" replace />} />
+
     </Routes>
   );
 }

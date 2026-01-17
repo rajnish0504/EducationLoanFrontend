@@ -1,38 +1,51 @@
 import { useEffect, useState } from "react";
 import api from "../utils/api";
+import AdminCharts from "./AdminCharts";
 
 const AdminDashboard = () => {
   const [summary, setSummary] = useState(null);
   const [recentApps, setRecentApps] = useState([]);
+  const [trendData, setTrendData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get("/api/admin/dashboard/summary")
-      .then((res) => setSummary(res.data))
-      .catch(console.error);
-
-    api.get("/api/admin/applications")
-      .then((res) => setRecentApps(res.data.slice(0, 5)))
-      .catch(console.error);
+    Promise.all([
+      api.get("/api/admin/dashboard/summary"),
+      api.get("/api/admin/applications"),
+      api.get("/api/admin/dashboard/trend"),
+    ])
+      .then(([summaryRes, appsRes, trendRes]) => {
+        setSummary(summaryRes.data);
+        setRecentApps(appsRes.data.slice(0, 5));
+        setTrendData(trendRes.data);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
-  const summaryData = summary
-    ? [
-        { label: "Total Applications", value: summary.totalApplications },
-        { label: "Pending Documents", value: summary.pendingDocuments },
-        { label: "Incorrect Documents", value: summary.incorrectDocuments },
-        { label: "Approved Loans", value: summary.approvedLoans },
-      ]
-    : [];
+  if (loading) {
+    return (
+      <p className="text-slate-400 text-center mt-20">
+        Loading dashboard...
+      </p>
+    );
+  }
+
+  const summaryData = [
+    { label: "Total Applications", value: summary.totalApplications },
+    { label: "Approved Applications", value: summary.approvedApplications },
+    { label: "Rejected Applications", value: summary.rejectedApplications },
+    { label: "Pending Applications", value: summary.pendingApplications },
+  ];
 
   return (
     <div className="space-y-12">
 
-      {/* ===== Title ===== */}
       <h1 className="text-3xl font-bold text-white">
         Admin Dashboard
       </h1>
 
-      {/* ===== Summary Cards ===== */}
+      {/* ===== CARDS ===== */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {summaryData.map((item) => (
           <div
@@ -49,40 +62,25 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      {/* ===== System Alerts ===== */}
-      <div className="bg-[#131c31] border border-slate-700 rounded-2xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">
-          System Alerts
-        </h2>
+      {/* ===== CHARTS ===== */}
+      <AdminCharts summary={summary} trendData={trendData} />
 
-        <ul className="space-y-2 text-sm text-slate-300">
-          <li>⚠️ {summary?.pendingDocuments ?? 0} applications need document verification</li>
-          <li>❌ {summary?.incorrectDocuments ?? 0} applications have incorrect documents</li>
-          <li>✅ {summary?.approvedLoans ?? 0} loans approved successfully</li>
-        </ul>
-      </div>
-
-      {/* ===== Recent Applications ===== */}
+      {/* ===== RECENT ===== */}
       <div className="bg-[#131c31] border border-slate-700 rounded-2xl p-6">
         <h2 className="text-lg font-semibold text-white mb-6">
           Recent Loan Applications
         </h2>
 
         <div className="space-y-4">
-          {recentApps.length === 0 && (
-            <p className="text-slate-400 text-sm">
-              No recent applications found.
-            </p>
-          )}
-
           {recentApps.map((app) => (
             <div
               key={app.applicationId}
-              className="flex justify-between items-center bg-[#0b1220] rounded-xl p-4"
+              className="flex justify-between items-center
+                         bg-[#0b1220] rounded-xl p-4"
             >
               <div>
                 <p className="text-white font-medium">
-                  {app.student?.name || "Student"}
+                  {app.student?.name}
                 </p>
                 <p className="text-slate-400 text-sm">
                   ₹{app.loanAmount} • {app.courseName}
@@ -105,24 +103,6 @@ const AdminDashboard = () => {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* ===== Quick Actions ===== */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[
-          "Review Pending Documents",
-          "Approve Loan Applications",
-          "View Reports & Analytics",
-        ].map((action) => (
-          <div
-            key={action}
-            className="bg-[#131c31] border border-slate-700 rounded-2xl p-6
-                       text-center text-white cursor-pointer
-                       hover:bg-[#182347] transition"
-          >
-            {action}
-          </div>
-        ))}
       </div>
 
     </div>

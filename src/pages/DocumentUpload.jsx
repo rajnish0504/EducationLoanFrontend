@@ -27,7 +27,7 @@ const DocumentUpload = () => {
     formData.append("file", file);
 
     try {
-      await api.post("/api/documents/upload", formData);
+      await api.post("/api/student/documents/upload", formData);
       setMessage("Document uploaded successfully");
       setSuccess(true);
       setDocumentType("");

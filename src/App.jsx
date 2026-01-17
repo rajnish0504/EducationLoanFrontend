@@ -19,6 +19,8 @@ import DocumentUpload from "./pages/DocumentUpload";
 import AdminLayout from "./dashboard/AdminLayout";
 import AdminDashboard from "./dashboard/AdminDashboard";
 import AdminApplications from "./dashboard/AdminApplications";
+import AdminApprovals from "./dashboard/AdminApprovals";
+import AdminStudents from "./dashboard/AdminStudents";
 
 /* ===== Auth ===== */
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -27,12 +29,12 @@ function App() {
   return (
     <Routes>
 
-      {/* ===== Public Routes ===== */}
+      {/* ================= PUBLIC ROUTES ================= */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
 
-      {/* ===== Student Routes (Nested) ===== */}
+      {/* ================= STUDENT ROUTES ================= */}
       <Route
         path="/student"
         element={
@@ -47,7 +49,7 @@ function App() {
         <Route path="documents" element={<Documents />} />
       </Route>
 
-      {/* ===== Student Standalone Pages ===== */}
+      {/* ===== Student Standalone Pages =====*/}
       <Route
         path="/apply-loan"
         element={
@@ -55,7 +57,7 @@ function App() {
             <LoanEligibility />
           </ProtectedRoute>
         }
-      />
+      /> 
 
       <Route
         path="/upload-documents/:applicationId"
@@ -66,7 +68,7 @@ function App() {
         }
       />
 
-      {/* ===== Admin Routes (Nested like Student) ===== */}
+      {/* ================= ADMIN ROUTES ================= */}
       <Route
         path="/admin"
         element={
@@ -78,9 +80,11 @@ function App() {
         <Route index element={<AdminDashboard />} />
         <Route path="dashboard" element={<AdminDashboard />} />
         <Route path="applications" element={<AdminApplications />} />
+        <Route path="approvals" element={<AdminApprovals />} />
+        <Route path="students" element={<AdminStudents />} />
       </Route>
 
-      {/* ===== Smart Dashboard Redirect ===== */}
+      {/* ================= SMART DASHBOARD REDIRECT ================= */}
       <Route
         path="/dashboard"
         element={
@@ -94,7 +98,7 @@ function App() {
         }
       />
 
-      {/* ===== Fallback ===== */}
+      {/* ================= FALLBACK ================= */}
       <Route path="*" element={<Navigate to="/" replace />} />
 
     </Routes>

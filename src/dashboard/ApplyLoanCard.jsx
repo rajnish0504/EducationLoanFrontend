@@ -11,12 +11,8 @@ const ApplyLoanCard = () => {
           <FilePlus />
         </div>
         <div>
-          <h3 className="text-white font-semibold">
-            Apply for Education Loan
-          </h3>
-          <p className="text-slate-400 text-sm">
-            Submit application & documents
-          </p>
+          <h3 className="text-white font-semibold">Apply for Education Loan</h3>
+          <p className="text-slate-400 text-sm">Submit application & documents</p>
         </div>
       </div>
 

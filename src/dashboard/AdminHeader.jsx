@@ -9,8 +9,7 @@ const AdminHeader = () => {
   useEffect(() => {
     api.get("/api/admin/me")
       .then((res) => {
-        // email comes → show before @
-        const email = res.data.name;
+        const email = res.data.email;
         setAdminName(email.split("@")[0]);
       })
       .catch(() => {

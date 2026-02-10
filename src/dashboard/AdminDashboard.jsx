@@ -52,9 +52,7 @@ const AdminDashboard = () => {
             key={item.label}
             className="bg-[#131c31] border border-slate-700 rounded-2xl p-6"
           >
-            <p className="text-slate-400 text-sm">
-              {item.label}
-            </p>
+            <p className="text-slate-400 text-sm">{item.label}</p>
             <p className="text-white text-2xl font-bold mt-2">
               {item.value}
             </p>
@@ -65,7 +63,7 @@ const AdminDashboard = () => {
       {/* ===== CHARTS ===== */}
       <AdminCharts summary={summary} trendData={trendData} />
 
-      {/* ===== RECENT ===== */}
+      {/* ===== RECENT APPLICATIONS ===== */}
       <div className="bg-[#131c31] border border-slate-700 rounded-2xl p-6">
         <h2 className="text-lg font-semibold text-white mb-6">
           Recent Loan Applications
@@ -80,7 +78,10 @@ const AdminDashboard = () => {
             >
               <div>
                 <p className="text-white font-medium">
-                  {app.student?.name}
+                  {app.studentName}
+                </p>
+                <p className="text-slate-400 text-sm">
+                  {app.studentEmail}
                 </p>
                 <p className="text-slate-400 text-sm">
                   ₹{app.loanAmount} • {app.courseName}

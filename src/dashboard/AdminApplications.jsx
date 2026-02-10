@@ -16,27 +16,41 @@ const AdminApplications = () => {
     api
       .get("/api/admin/applications")
       .then((res) => setApplications(res.data))
-      .catch(console.error);
+      .catch((err) => {
+        console.error("Failed to fetch applications", err);
+      });
   };
 
   const handleApprove = async (id) => {
-    await api.post(`/api/admin/approve/${id}`);
-    fetchApplications();
+    try {
+      await api.post(`/api/admin/approve/${id}`);
+      fetchApplications();
+    } catch (err) {
+      alert("Failed to approve application");
+    }
   };
 
   const handleReject = async (id) => {
     const reason = prompt("Reason for rejection?");
     if (!reason) return;
-    await api.post(`/api/admin/reject/${id}?reason=${reason}`);
-    fetchApplications();
+
+    try {
+      await api.post(`/api/admin/reject/${id}?reason=${reason}`);
+      fetchApplications();
+    } catch (err) {
+      alert("Failed to reject application");
+    }
   };
 
+  /* 🔥 FILTER + SEARCH (FIXED) */
   const filteredApplications = applications.filter((app) => {
     const statusMatch =
       filter === "ALL" || app.applicationStatus === filter;
 
     const searchMatch =
-      app.student?.name?.toLowerCase().includes(search.toLowerCase());
+      app.studentName
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
 
     return statusMatch && searchMatch;
   });
@@ -116,7 +130,10 @@ const AdminApplications = () => {
             {/* LEFT INFO */}
             <div>
               <p className="text-white font-semibold text-lg">
-                {app.student?.name}
+                {app.studentName}
+              </p>
+              <p className="text-slate-400 text-sm">
+                {app.studentEmail}
               </p>
               <p className="text-slate-400 text-sm">
                 ₹{app.loanAmount} • {app.courseName}
@@ -144,7 +161,6 @@ const AdminApplications = () => {
             {/* ACTIONS */}
             <div className="flex items-center gap-3">
 
-              {/* ONLY FOR PENDING */}
               {app.applicationStatus === "PENDING" && (
                 <>
                   <button
@@ -169,7 +185,6 @@ const AdminApplications = () => {
                 </>
               )}
 
-              {/* ALWAYS AVAILABLE */}
               <button
                 onClick={() =>
                   navigate(`/admin/applications/${app.applicationId}`)

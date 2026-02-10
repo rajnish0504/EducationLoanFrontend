@@ -9,8 +9,7 @@ import Signup from "./pages/Signup";
 import StudentDashboard from "./dashboard/StudentDashboard";
 import DashboardHome from "./dashboard/DashboardHome";
 import MyLoans from "./dashboard/MyLoans";
-import Documents from "./dashboard/Documents";
-import ApplyLoan from "./dashboard/ApplyLoan"; // ✅ ADD
+import ApplyLoan from "./dashboard/ApplyLoan";
 
 /* ADMIN */
 import AdminLayout from "./dashboard/AdminLayout";
@@ -43,9 +42,8 @@ function App() {
       >
         <Route index element={<DashboardHome />} />
         <Route path="dashboard" element={<DashboardHome />} />
-        <Route path="apply-loan" element={<ApplyLoan />} /> {/* ✅ FIX */}
+        <Route path="apply-loan" element={<ApplyLoan />} />
         <Route path="loans" element={<MyLoans />} />
-        <Route path="documents" element={<Documents />} />
       </Route>
 
       {/* ADMIN */}
@@ -60,7 +58,10 @@ function App() {
         <Route index element={<AdminDashboard />} />
         <Route path="dashboard" element={<AdminDashboard />} />
         <Route path="applications" element={<AdminApplications />} />
-        <Route path="applications/:applicationId" element={<AdminApplicationDetails />} />
+        <Route
+          path="applications/:applicationId"
+          element={<AdminApplicationDetails />}
+        />
         <Route path="approvals" element={<AdminApprovals />} />
         <Route path="students" element={<AdminStudents />} />
       </Route>
@@ -78,7 +79,6 @@ function App() {
       />
 
       <Route path="*" element={<Navigate to="/" />} />
-
     </Routes>
   );
 }

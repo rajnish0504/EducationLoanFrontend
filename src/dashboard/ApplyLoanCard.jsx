@@ -11,17 +11,13 @@ const ApplyLoanCard = () => {
           <FilePlus />
         </div>
         <div>
-          <h3 className="text-white font-semibold">
-            Apply for Education Loan
-          </h3>
-          <p className="text-slate-400 text-sm">
-            Submit application & documents
-          </p>
+          <h3 className="text-white font-semibold">Apply for Education Loan</h3>
+          <p className="text-slate-400 text-sm">Submit application & documents</p>
         </div>
       </div>
 
       <button
-        onClick={() => navigate("/apply-loan")}
+        onClick={() => navigate("/student/apply-loan")}
         className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
       >
         Apply →

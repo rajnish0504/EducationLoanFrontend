@@ -1,148 +1,73 @@
-import { useEffect } from "react";
-import circuit from "../assets/circuit.svg";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import FloatingCards from "./FloatingCards";
 
 const Hero = () => {
-  // 🔥 Scroll-reactive energy control
- useEffect(() => {
-  const handleScroll = () => {
-    const scrollY = window.scrollY;
-    const maxScroll = 700;
-    const progress = Math.min(scrollY / maxScroll, 1);
+  const [appId, setAppId] = useState("");
+  const navigate = useNavigate();
 
-    // Energy speed
-    const speed = 6 - progress * 3; // 6s → 3s
-    const glow = 0.35 + progress * 0.4;
-
-    // Color temperature shift (blue → indigo)
-    const hue = 210 + progress * 20; // 210 → 230
-
-    document.documentElement.style.setProperty(
-      "--energy-speed",
-      `${speed}s`
-    );
-    document.documentElement.style.setProperty(
-      "--energy-glow",
-      glow.toString()
-    );
-    document.documentElement.style.setProperty(
-      "--energy-hue",
-      hue.toString()
-    );
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (appId.trim()) {
+      navigate(`/student/dashboard`);
+    } else {
+      navigate(`/signup`);
+    }
   };
-
-  const handleMouseMove = (e) => {
-    const x = (e.clientX / window.innerWidth) * 100;
-    const y = (e.clientY / window.innerHeight) * 100;
-
-    document.documentElement.style.setProperty("--energy-x", `${x}%`);
-    document.documentElement.style.setProperty("--energy-y", `${y}%`);
-  };
-
-  window.addEventListener("scroll", handleScroll);
-  window.addEventListener("mousemove", handleMouseMove);
-
-  return () => {
-    window.removeEventListener("scroll", handleScroll);
-    window.removeEventListener("mousemove", handleMouseMove);
-  };
-}, []);
 
   return (
-    <section
-  id="hero"
-  className="
-    relative overflow-hidden
-    bg-grid bg-energy bg-sparks bg-reactive
-    bg-gradient-to-br
-    from-blue-50 via-white to-white
-    dark:from-[#0b1220] dark:via-[#0e1629] dark:to-[#0b1220]
-  "
->
-
-      {/* SVG Circuit Traces */}
-      <img
-        src={circuit}
-        alt=""
-        className="
-          circuit-svg
-          absolute inset-0 w-full h-full
-          object-cover
-          opacity-25 dark:opacity-35
-          pointer-events-none
-        "
-      />
-
-      {/* Glow Orbs */}
-      <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-500/20 dark:bg-blue-400/10 blur-3xl rounded-full" />
-      <div className="absolute top-40 -right-24 w-96 h-96 bg-indigo-500/20 dark:bg-indigo-400/10 blur-3xl rounded-full" />
-
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 py-28 grid md:grid-cols-2 gap-14 items-center animate-fade-up">
-        {/* Left Content */}
-        <div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight">
+    <section id="hero" className="relative pt-8 pb-12 px-4 sm:px-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        {/* LEFT COLUMN: Main Text & CTA */}
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="lg:col-span-7 flex flex-col justify-center pr-0 lg:pr-4"
+        >
+          {/* Main Heading */}
+          <h1 className="text-4xl sm:text-5xl xl:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15] mb-5">
             Smart Education Loans <br />
-            <span className="text-blue-600 dark:text-blue-400">
-              For a Smarter Future
+            for a{" "}
+            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 bg-clip-text text-transparent">
+              Smarter Future
             </span>
           </h1>
 
-          <p className="mt-6 max-w-xl">
-            Apply, manage, and track your education loan with complete
-            transparency, security, and ease — all in one powerful platform.
+          {/* Subtitle */}
+          <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl mb-8 font-normal">
+            Apply, manage, track, and repay your education loan from one intelligent platform with complete transparency, security, and real-time updates.
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row gap-4">
-            <button
-              className="
-                bg-blue-600 text-white
-                px-7 py-3 rounded-xl
-                shadow-md hover:shadow-lg
-                hover:bg-blue-700
-                transition
-              "
-            >
-              Apply for Loan
-            </button>
+          {/* Search / Application Bar */}
+          <form onSubmit={handleSearch} className="w-full max-w-lg">
+            <div className="relative flex items-center bg-white rounded-full p-1.5 pl-4 shadow-lg shadow-slate-200/60 border border-slate-200/80 hover:border-blue-200 transition-all focus-within:ring-2 focus-within:ring-blue-500/20">
+              <Search className="w-5 h-5 text-slate-400 shrink-0 mr-3" />
+              <input
+                type="text"
+                value={appId}
+                onChange={(e) => setAppId(e.target.value)}
+                placeholder="Enter your Application ID or Start Your Loan Journey..."
+                className="w-full text-xs sm:text-sm text-slate-800 placeholder-slate-400 bg-transparent focus:outline-none pr-2"
+              />
+              <button
+                type="submit"
+                className="bg-[#18181B] hover:bg-slate-800 text-white text-xs sm:text-sm font-medium px-5 py-2.5 rounded-full shrink-0 transition-all hover:scale-[1.02]"
+              >
+                Apply Now
+              </button>
+            </div>
+          </form>
+        </motion.div>
 
-            <button
-              onClick={() =>
-                document.getElementById("emi")?.scrollIntoView({
-                  behavior: "smooth",
-                })
-              }
-              className="
-                border border-slate-300 dark:border-slate-600
-                px-7 py-3 rounded-xl
-                hover:bg-slate-100 dark:hover:bg-slate-800
-                transition
-              "
-            >
-              Calculate EMI
-            </button>
-          </div>
+        {/* RIGHT COLUMN: Floating Cards Graphic */}
+        <div className="lg:col-span-5 flex justify-center items-center mt-6 lg:mt-0">
+          <FloatingCards />
         </div>
 
-        {/* Right Card */}
-        <div className="hidden md:block">
-          <div
-            className="
-              bg-white dark:bg-[#131c31]
-              p-8 rounded-2xl
-              shadow-xl
-              border border-slate-200 dark:border-slate-700
-            "
-          >
-            <h3 className="text-lg font-semibold mb-3">
-              Trusted Platform
-            </h3>
-            <p>
-              Built with modern security, scalable architecture, and
-              role-based access to support students throughout their
-              education journey.
-            </p>
-          </div>
-        </div>
       </div>
     </section>
   );
